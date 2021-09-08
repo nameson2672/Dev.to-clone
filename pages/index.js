@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import Loader from '../components/Loader'
 import toast from 'react-hot-toast'
 import { firestore, postToJSON } from '../lib/firebase';
-import { query, collectionGroup, getDocs, where, limit, orderBy, startAfter, T, Timestamp } from 'firebase/firestore';
+import { query, collectionGroup, getDocs, where, limit, orderBy, startAfter,Timestamp } from 'firebase/firestore';
 import { useState } from 'react'
 import PostFeed from '../components/PostFeed';
 
