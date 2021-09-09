@@ -1,21 +1,16 @@
-import styles from '../../styles/Admin.module.css';
-import AuthCheck from '../../components/AuthCheck';
-import { firestore, auth, serverTimestamp } from '../../lib/firebase';
-import ImageUploader from '../../components/ImageUploader.js';
+import styles from '@styles/Admin.module.css';
+import AuthCheck from '@components/AuthCheck';
+import { firestore, auth, serverTimestamp } from '@lib/firebase';
+import ImageUploader from '@components/ImageUploader';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import { useForm } from 'react-hook-form';
-
-
-// import {ReactMarkdown} from 'react-markdown';
-
-
+import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { collection, query, deleteDoc, where, getDocs, limit, doc , getDoc } from 'firebase/firestore';
 
 export default function AdminPostEdit(props) {
   return (
@@ -31,27 +26,9 @@ function PostManager() {
   const router = useRouter();
   const { slug } = router.query;
 
-//   const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
-  const [post, setpost] = useState();
-  let postRef;
-  useEffect(async () => {
-    postRef = doc(firestore, 'users', `${auth.currentUser.uid}`, 'posts', `${slug}`)
-    const docsnap = (await getDoc(postRef));
-    const posts = docsnap.data();
-    setpost(posts);
+  const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
+  const [post] = useDocumentDataOnce(postRef);
 
-  }, [])
-  // const getdata = async () => {
-  //   // postRef = query(collection(firestore, 'users', `${auth.currentUser.uid}`, 'posts'),where('slug', "==", `${slug}`),limit(1));
-  //   // (await getDocs(postRef)).forEach(doc=> post.push(doc.data()));
-  //   // console.log(post);
-    
-    
-
-  // }
-console.log(post)
-  
-    
   return (
     <main className={styles.container}>
       {post && (
@@ -98,8 +75,7 @@ function PostForm({ defaultValues, postRef, preview }) {
     <form onSubmit={handleSubmit(updatePost)}>
       {preview && (
         <div className="card">
-          {/* <ReactMarkdown >{watch('content')}</ReactMarkdown> */}
-          {watch('content')}
+          <ReactMarkdown>{watch('content')}</ReactMarkdown>
         </div>
       )}
 
@@ -136,7 +112,7 @@ function DeletePostButton({ postRef }) {
   const deletePost = async () => {
     const doIt = confirm('are you sure!');
     if (doIt) {
-      await deleteDoc(postRef);
+      await postRef.delete();
       router.push('/admin');
       toast('post annihilated ', { icon: '🗑️' });
     }

@@ -1,22 +1,21 @@
-import Link  from 'next/link';
+import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 
-export function PostContent({ posts }) {
-    const createdAt = typeof posts?.createdAt === 'number' ? new Date(posts.createdAt) : posts.createdAt;
-    
+// UI component for main post content
+export default function PostContent({ post }) {
+  const createdAt = typeof post?.createdAt === 'number' ? new Date(post.createdAt) : post.createdAt.toDate();
 
-    return (
-        <div className="card">
-            <h1>{posts?.title}</h1>
-            <span className="text-sm">
-                Written by{' '}
-                <Link href={`/${posts.username}`}>
-                    <a className="text-info">@{ posts.username}</a>
-                </Link>{' '}
-                on {"createdAt"}
-            </span>
-
-            
-            <p>{posts.content}</p>
-        </div>
-    )
+  return (
+    <div className="card">
+      <h1>{post?.title}</h1>
+      <span className="text-sm">
+        Written by{' '}
+        <Link href={`/${post.username}/`}>
+          <a className="text-info">@{post.username}</a>
+        </Link>{' '}
+        on {createdAt.toISOString()}
+      </span>
+      <ReactMarkdown>{post?.content}</ReactMarkdown>
+    </div>
+  );
 }

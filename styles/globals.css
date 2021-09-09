@@ -6,7 +6,7 @@
   --color-blue: #3b49df;
   --color-red: #df3b3b;
   --color-green: #3bdf72;
-  --color-gray: #b5bdc4;
+  --color-gray: #a5a9ad;
 }
 html,
 body {
@@ -167,11 +167,89 @@ button.btn-logo {
 }
 
 /* Cards */
+.FeedWarp{
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-gap: 16px;
+  position: relative;
+  
+}
+.info{
+  background-color:#e0e2e1;
+  border-radius: 20px;
+  height: 250px;
+  padding: 15px;
+  margin: 10px;
+  
+}
+.privacy{
+   background-color:#e0e2e1;
+  border-radius: 20px;
+  margin-top: 13px;
+  position: relative;
+
+  
+}
+.privacy .img, .markdown_learn .img{
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  display: block;
+  transition: all ease-in-out 0.5s;
+}
+.privacy img, .markdown_learn img{
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  display: block;
+  position:relative;
+  transition: all ease-in-out 0.5s;
+}
+.text_privacy{
+  padding: 15px
+}
+.markdown_learn{
+  background-color:#e0e2e1;
+  border-radius: 20px;
+  margin: 10px;
+  position: relative;
+  object-fit: contain; 
+}
+
+.center{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.mark-learn{
+  background-color: var(--color-blue);
+  padding: 15px 20px;
+  border-radius: 7px;
+  color: white;
+  font-weight: bold;
+  
+}
+.mark-learn:hover{
+  background-color: #3b47cc;
+  padding: 15px 20px;
+  border-radius: 7px;
+  color: rgb(228, 227, 227);
+  font-weight: bold;
+  
+}
+@media (max-width: 600px){
+  .FeedWarp{
+    display: block;
+  }
+  .left, .privacy{
+    display: none;
+  }
+}
 
 .card {
+
   padding: 2rem;
-  margin: 1rem 0;
-  background-color: white;
+  margin: 1rem;
+  background-color: rgb(214, 214, 214);
   border: 1px solid var(--color-gray);
   border-radius: 8px;
 }

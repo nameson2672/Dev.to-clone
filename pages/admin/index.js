@@ -1,8 +1,8 @@
-import styles from '../../styles/Admin.module.css';
-import AuthCheck from '../../components/AuthCheck';
-import PostFeed from '../../components/PostFeed';
-import { UserContext } from '../../lib/context';
-import { firestore, auth, serverTimestamps } from '../../lib/firebase';
+import styles from '@styles/Admin.module.css';
+import AuthCheck from '@components/AuthCheck';
+import PostFeed from '@components/PostFeed';
+import { UserContext } from '@lib/context';
+import { firestore, auth, serverTimestamp } from '@lib/firebase';
 
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import kebabCase from 'lodash.kebabcase';
 import toast from 'react-hot-toast';
-import { collection, query,orderBy, setDoc, getDocs, doc as dc,where, limit } from 'firebase/firestore';
 
 export default function AdminPostsPage(props) {
   return (
@@ -24,19 +23,12 @@ export default function AdminPostsPage(props) {
 }
 
 function PostList() {
-//   const ref = firestore.collection('users').doc(auth.currentUser.uid).collection('posts');
-//   const query = ref.orderBy('createdAt');
-    let posts = [];
-    const data = async () => {
+  const ref = firestore.collection('users').doc(auth.currentUser.uid).collection('posts');
+  const query = ref.orderBy('createdAt');
+  const [querySnapshot] = useCollection(query);
 
-        const querys = query(collection(firestore, 'users', `${auth.currentUser.uid}`, 'posts'), orderBy('createdAt'));
-        const querySnapshot = await getDocs(querys);
-        querySnapshot.forEach((doc) => posts.push(doc.data()));
-        return posts;
+  const posts = querySnapshot?.docs.map((doc) => doc.data());
 
-    }
-    const post = data();
-    console.log(posts);
   return (
     <>
       <h1>Manage your Posts</h1>
@@ -60,25 +52,22 @@ function CreateNewPost() {
   const createPost = async (e) => {
     e.preventDefault();
     const uid = auth.currentUser.uid;
-    // const ref = firestore.collection('users').doc(uid).collection('posts').doc(slug);
-      const ref = dc(firestore, 'users', `${uid}`, 'posts', `${slug}`);
+    const ref = firestore.collection('users').doc(uid).collection('posts').doc(slug);
 
     // Tip: give all fields a default value here
     const data = {
       title,
       slug,
       uid,
-      username:username.username,
+      username,
       published: false,
       content: '# hello world!',
-      createdAt: serverTimestamps,
-      updatedAt: serverTimestamps,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
       heartCount: 0,
     };
 
-    // await ref.set(data);
-      await setDoc(ref, data);
-    
+    await ref.set(data);
 
     toast.success('Post created!');
 

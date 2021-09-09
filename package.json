@@ -1,28 +1,24 @@
 {
-  "name": "learn",
+  "name": "nextlearn",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "devwin": "./node_modules/.bin/next.cmd dev -p 3005",
+    "export": "next export"
   },
   "dependencies": {
-    "firebase": "^9.0.0",
-    "firebase-admin": "^9.11.1",
+    "firebase": "^8.2.1",
     "lodash.debounce": "^4.0.8",
     "lodash.kebabcase": "^4.1.1",
-    "next": "11.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "next": "10.0.4",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
     "react-firebase-hooks": "^2.2.0",
     "react-hook-form": "^6.14.2",
-    "react-hot-toast": "^2.1.1",
+    "react-hot-toast": "^1.0.2",
     "react-markdown": "^5.0.3"
-  },
-  "devDependencies": {
-    "eslint": "7.32.0",
-    "eslint-config-next": "11.1.0"
   }
 }

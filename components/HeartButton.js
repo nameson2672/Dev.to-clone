@@ -1,43 +1,26 @@
-import { firestore, auth } from '../lib/firebase';
-import { collection, doc, writeBatch, increment, getDoc, query, collectionGroup, getDocs } from '@firebase/firestore';
-import { useEffect, useState } from 'react';
- 
+import { firestore, auth, increment } from '@lib/firebase';
+import { useDocument } from 'react-firebase-hooks/firestore';
 
 // Allows user to heart or like a post
-export default function Heart({ username, slug, uid, heart }) {
-
-  // const getUid = async () => {
-  //   const postOwnerRef = doc(firestore, 'usernames', `${username}`);
-  //   uid = (await getDoc(postOwnerRef)).data();
-  // }
-
-
-
-  const heartRef = doc(firestore, 'users', uid, 'posts', slug, 'hearts', auth.currentUser.uid);
-  const [heartDoc, setHeartDoc] = useState();
-  useEffect(async () => {
-    setHeartDoc((await getDoc(heartRef)).data());
-  
-  }, [heart])
- 
-  
-  const postRef = doc(firestore, 'users', uid, 'posts', slug);
-
-  // const postRef = query(collectionGroup(firestore, 'posts', slug));
+export default function Heart({ postRef }) {
+  // Listen to heart document for currently logged in user
+  const heartRef = postRef.collection('hearts').doc(auth.currentUser.uid);
+  const [heartDoc] = useDocument(heartRef);
 
   // Create a user-to-post relationship
   const addHeart = async () => {
-    const uids = auth.currentUser.uid;
-    const batch = writeBatch(firestore);
+    const uid = auth.currentUser.uid;
+    const batch = firestore.batch();
+
     batch.update(postRef, { heartCount: increment(1) });
-    // const heartRefs = query(collection(firestore, 'users', uid, 'posts', `${slug}`, 'hearts'),doc(auth.currentUser.uid));
-    batch.set(heartRef, { uids });
+    batch.set(heartRef, { uid });
+
     await batch.commit();
   };
 
   // Remove a user-to-post relationship
   const removeHeart = async () => {
-    const batch = writeBatch(firestore);
+    const batch = firestore.batch();
 
     batch.update(postRef, { heartCount: increment(-1) });
     batch.delete(heartRef);
@@ -45,7 +28,7 @@ export default function Heart({ username, slug, uid, heart }) {
     await batch.commit();
   };
 
-  return heartDoc?(
+  return heartDoc?.exists ? (
     <button onClick={removeHeart}>💔 Unheart</button>
   ) : (
     <button onClick={addHeart}>💗 Heart</button>
